@@ -6,16 +6,20 @@
  */
 header("Content-type:application/json;Charset=utf8");
 
-function getJSON($playlist_id,$lyc = false)
+function getJSON($playlist_id)
 {
-    $res =  file_get_contents(sprintf('https://api.injahow.cn/meting/?type=playlist&id=%s',$playlist_id));
-    return $res;
+    return  file_get_contents(sprintf('https://api.injahow.cn/meting/?type=playlist&id=%s',$playlist_id));
 }
 
-function save($playlist_id,$dir = null,$lyc = false,$etime = 600)
+
+function getLrc($song_id){
+    return  file_get_contents(sprintf('https://api.injahow.cn/meting/?server=netease&type=lrc&id=%s',$song_id));
+}
+
+function save($id,$dir = null,$etime = 600,$url=false)
 {
     if($dir){
-        $filename = $dir .'/'. $playlist_id . '.json';
+        $filename = $dir .'/'. $id . '.json';
         if (is_file($filename)) {
            $time = time();
            $ftime = filemtime($filename);
@@ -24,10 +28,13 @@ function save($playlist_id,$dir = null,$lyc = false,$etime = 600)
            }
         }
     }
-
-    $musicLIST = getJSON($playlist_id, $lyc);
-    if(!empty($musicLIST) && isset($filename)) {
-        file_put_contents($filename, $musicLIST);
+    if($url){
+        $content = getLrc($id);
+    }else{
+        $content = getJSON($id);
     }
-    return $musicLIST;
+    if(!empty($content) && isset($filename)) {
+        file_put_contents($filename, $content);
+    }
+    return $content;
 }

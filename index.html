@@ -8,7 +8,11 @@
 	<title>引用demo示例</title>
 	<script src="http://apps.bdimg.com/libs/jquery/2.1.1/jquery.min.js"></script>
 </head>
+<style>.container{display: flex; align-items: center;justify-content: center;height:100vh}.container>p{font-size: 26px;}</style>
 <body>
+    <div class="container">
+        <p id="lyctext"></p>
+    </div>
 
 <!-- 这里是关于pjax的使用示例，复制就完事了，兼容绝大部分网站 -->
 <!-- <link href="https://cdn.bootcss.com/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
@@ -33,7 +37,7 @@
 var musicConfig = {
    "position": "right-bottom", // 位置
    "color": "rgba(128,128,128,.2)", // 颜色
-   "list": "6800773181" // 网易歌单id，多个用逗号分割
+   "list": "6683609683" // 网易歌单id，多个用逗号分割
 };
 </script>
 <!-- 这里就是的js引用地址,也可以在第三方网页使用，可以跨域使用 -->
