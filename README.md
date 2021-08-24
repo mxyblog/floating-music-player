@@ -18,7 +18,7 @@
 - F键 重头开始播放播放列表
 
 ### 效果：
-![alt 效果演示](demo.gif)
+![alt 效果演示](./pic/demo.gif)
 
 ### 鸣谢
 - https://gitee.com/lovefc/suspended_web_music_player
