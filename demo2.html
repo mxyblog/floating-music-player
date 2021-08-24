@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>调用封装好的播放器</title>
+    <script src="http://apps.bdimg.com/libs/jquery/2.1.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="./css/css.css">
+    <script src="./js/mjs.min.js?v=1"></script>
+
+</head>
+<style>
+    .container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100vh
+    }
+
+    .container>p {
+        font-size: 26px;
+    }
+</style>
+
+<body>
+    <p id="songname"></p>
+    <div class="container">
+        <p id="lyctext">
+            键盘提示:<br>
+            Enter键 播放、暂停<br>
+            方向键↑ 音量增加<br>
+            方向键↓ 音量减小<br>
+            方向键← 上一首<br>
+            方向键→ 下一首<br>
+            F键 单曲循环
+        </p>
+    </div>
+    <div>
+        <div class="float-music animated" style="bottom: 0px; right: 40px;">
+            <img class="cover" id="music-cover" src="./pic/default.jpg">
+            <div class="animated-circles animated">
+                <div class="circle c-1" style="background: rgba(128, 128, 128, 0.2);"></div>
+                <div class="circle c-2" style="background: rgba(128, 128, 128, 0.2);"></div>
+                <div class="circle c-3" style="background: rgba(128, 128, 128, 0.2);"></div>
+            </div>
+        </div>
+    </div>
+</body>
+<script>
+    let musiclist = {};
+    // 获取歌单json
+    $.ajax({
+        url: 'https://api.lovefc.cn/music/api.php',
+        type: 'get',
+        async: false,
+        data: {},
+        success: function (data) {
+            musiclist = data;
+        },
+        fail: function () {
+            alert('歌单获取失败！');
+        }
+    });
+
+
+    // 实例化mjs类库
+    let music = new mjs();
+
+    // 歌词显示的回调函数，写在init函数调用前面
+    music.lycCallback = (lycText) => {
+        $('#lyctext').html(lycText);
+    };
+
+    // 切歌的回调，写在init函数调用前面
+    music.switchCallback = (attr) => {
+        music.autoPlay(); // 可以在这里写 自动播放
+        $('#songname').html(attr.title + "-" + attr.author);
+        $('.cover').attr('src', attr.pic);
+    };
+    music.init(musiclist, 1, 0.5,true);
+    $(document).keydown(function (event) {
+        console.log(music.playStatus);
+        if (event.keyCode == 13) {
+            if (music.playStatus == 1) {
+                music.stopPlay();
+            } else {
+                music.autoPlay();
+            }
+        }
+        if (event.keyCode == 38) {
+            music.playVolume(1, () => {
+            })
+        }
+        if (event.keyCode == 40) {
+            music.playVolume(0.3, () => {
+            })
+        }
+        if (event.keyCode == 39) {
+            music.nextMusic(function (music) {
+                // 播放下一首的事件回调
+            });
+        }
+        if (event.keyCode == 37) {
+            music.prevMusic(function (music) {
+                // 播放上一首的事件回调
+            });
+        }
+        if (event.keyCode == 70) {
+            music.orderMusic(2);
+        }
+    });
+</script>
+
+<!-- 这里就是的js引用地址,也可以在第三方网页使用，可以跨域使用 -->
+
+</html>
